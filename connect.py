@@ -10,36 +10,51 @@ import player
 pygame.init()
 back = (192,192,192)
 
+radius = 38
+
 # image for board background 
 boardImage = pygame.image.load("Connect4Board.png")
 
-# set up data for the board 
-board = np.full((7,6), 0)
-print(board)
+# set up data for the board. 7 across, 6 down, set as 0 
+board = np.full((6,7), 0)
 
 gameWindow = pygame.display.set_mode((640,480))
 pygame.display.set_caption('Connect 4')
 gameWindow.fill(back)
 clock = pygame.time.Clock()
 
-# Set up players 
-player1 = player.Player("red")
-player2 = player.Player("yellow")
+# These used to be made using an object but that may be phased out later
+# Set up players. red will equal 1, yellow 2 in the board array 
+player1 = "red"
+player2 = "yellow"
+playerTurn = "p1"
 
-print(player2.color)
 
 running = True 
 while running: 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        # Check for click. On click, check which player for color, paste at position 
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            # When checking for position, only check x-direction. y-axis is unnceessary because it fills bottom to top
+            x_pos = pygame.mouse.get_pos()[0]
+
+            # I know this is an incredibly crude way to keep track of which players turn it is and actual players but it kinda works so
+            if playerTurn == "p1":
+                current_player = player1
+                playerTurn = "p2"
+            else:
+                current_player = player2
+                playerTurn = "p1"
+
+            pygame.draw.circle(gameWindow, current_player, (pygame.mouse.get_pos()), radius)
+            # For the board, each position is about 90 pixels wide
+
+
 
     # Load 'or blit I guess?' the background png 
     gameWindow.blit(boardImage, (0,0))
-
-    # Check for click. On click, check which player for color, paste at position 
-
-
     # Upadte stuff every clock tick 
     pygame.display.update()
     clock.tick(60)

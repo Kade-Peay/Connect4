@@ -53,10 +53,7 @@ while running:
             center_x = (col + .5) * spacing_x
 
             # Call function that returns which row in the col to put the circle.
-            y = boardUpdate(col, playerTurn)
-            
-            row = y // spacing_y
-            center_y = (row + .5) * spacing_y
+            boardUpdate(col, playerTurn)
 
 
             # I know this is an incredibly crude way to keep track of which players turn it is and actual players but it kinda works so
@@ -67,25 +64,31 @@ while running:
                 current_player = player2
                 playerTurn = 1
 
-            # Actual draw of the circle
-            pygame.draw.circle(gameWindow, current_player, (center_x, center_y), radius)
+            updateBoard()
+
+
+
 
 
     def boardUpdate(col, playerTurn):
-        for row in range(rows):
-            if row == 0:
+        for row in reversed(range(rows)):
+            if board[int(row)][int(col)] == 0:
                 board[int(row)][int(col)] = playerTurn
-                print(board)
-                return row
+                return
+            
 
 
-    def centerCircles():
+    def updateBoard():
         # Later
         for row in range(rows):
             for col in range(cols):
                 center_x = int((col + .5) * spacing_x)
                 center_y = int((row + .5) * spacing_y)
-                pygame.draw.circle(gameWindow, "blue", (center_x, center_y), 5)
+                if board[row][col] == 1:
+                    pygame.draw.circle(gameWindow, "red", (center_x, center_y), radius)
+                if board[row][col] == 2:
+                    pygame.draw.circle(gameWindow, "yellow", (center_x, center_y), radius)
+
 
     # Load 'or blit I guess?' the background png 
     gameWindow.blit(boardImage, (0,0))
